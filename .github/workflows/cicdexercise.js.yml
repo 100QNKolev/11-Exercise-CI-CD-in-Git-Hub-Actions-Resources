@@ -27,9 +27,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: Install the packages
+    - name: Build the app
       run: npm install
-    - name: Start the app
-      run: npm start
     - name: run the tests
       run: npm test
+      
+  deploy:
+   needs: build
+   runs-on: ubuntu-latest
+   steps: 
+   - name: Deploy to render
+     uses: johnbeynon/render-deploy-action@v0.0.8
+     with:
+       service-id: ${{ secrets.SERVICE_ID }}
+       api-key: ${{ secrets.RENDER_TOKEN }}
+  
